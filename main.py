@@ -1,3 +1,4 @@
+import csv
 import dns.resolver
 import logging
 
@@ -17,10 +18,13 @@ class Operations:
     def query(self):
         """ queries dns """
         answers = dns.resolver.resolve(self.dns_record, self.record_type)
+        return_answers = [self.dns_record, self.record_type]
         for answer in answers:
             print(answer)
+            return_answers.append(answer)
         logger.info(
             f'DNS Query made for: {self.dns_record} Type: {self.record_type}')
+        return return_answers
 
     def add_record(self):
         print('Adding Records not yet supported.')
@@ -30,6 +34,22 @@ class Operations:
         print('Updating Records not yet supported.')
         logger.info('Updating Records not yet supported.')
 
+def export(results_to_export):
+    """ prompt to export to csv """
+    export = input('Would you like to export results to csv? (enter y/n: ')
+    if export == 'y':
+        fields = ['Record', 'Record Type', 'Answer']
+        filename = 'DNS_Results.csv'
+        with open(filename, 'w', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(fields)
+            writer.writerow(results_to_export)
+        print(f'CSV Saved Locally: {filename}')
+        logger.info(f'CSV Saved Locally: {filename}')
+    elif export == 'n':
+        print('Script complete')
+    else:
+        print('Unrecognized operation for export.')
 
 if __name__ == '__main__':
     print('Follow the prompts to search, add or edit a DNS record')
@@ -60,5 +80,5 @@ if __name__ == '__main__':
             logger.warning(f'Error occurred adding your record: {err}')
     else:
         print('Unrecognized operation. Please try again.')
-    print('Script complete')
+    export_results = export(query)
 
