@@ -23,7 +23,12 @@ class Operations:
             f'DNS Query made for: {self.dns_record} Type: {self.record_type}')
 
     def add_record(self):
-        pass
+        print('Adding Records not yet supported.')
+        logger.info('Adding Records not yet supported.')
+
+    def update_record(self):
+        print('Updating Records not yet supported.')
+        logger.info('Updating Records not yet supported.')
 
 
 if __name__ == '__main__':
@@ -43,6 +48,14 @@ if __name__ == '__main__':
         try:
             ops = Operations(dns_record, record_type)
             query = ops.add_record()
+        except Exception as err:
+            logger.warning(f'Error occurred adding your record: {err}')
+    elif workflow == 'update':
+        dns_record = input('Enter the record to update: ')
+        record_type = input('Enter the type of record (A, MX, PTR): ')
+        try:
+            ops = Operations(dns_record, record_type)
+            query = ops.update_record()
         except Exception as err:
             logger.warning(f'Error occurred adding your record: {err}')
     else:
